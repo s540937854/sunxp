@@ -1,4 +1,6 @@
 # encoding=utf-8
+import json
+
 
 class BaseResponse:
 
@@ -25,3 +27,11 @@ class BaseResponse:
         else:
             self.error_code = errorCode
             self.error_desc = errorDesc
+
+    def parseStr(self, str):
+        j = json.loads(str)
+        p = self.parseDict(j)
+        return p
+
+    def __str__(self):
+        return json.dumps(self.dict, sort_keys=True, ensure_ascii=False, indent=2)

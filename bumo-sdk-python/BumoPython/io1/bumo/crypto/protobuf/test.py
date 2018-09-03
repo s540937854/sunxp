@@ -19,4 +19,7 @@ createAccount.init_balance = 1000000000
 
 serial_str = transaction.SerializeToString()
 
-print len(serial_str)
+print transaction
+print operation
+print createAccount
+print serial_str

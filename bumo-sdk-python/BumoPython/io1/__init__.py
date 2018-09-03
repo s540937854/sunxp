@@ -50,66 +50,60 @@ reload(sys)
 sys.setdefaultencoding('utf-8')
 
 
-class parseObject():
-    def parseDict(self, d):
-        # top = parseObject()
-        seqs = tuple, list, set, frozenset
+class AA:
+    w = 0
+    ww = 0
 
+    def parseDict(self, d):
         for i, j in d.items():
-            if isinstance(j, dict):
-                setattr(self, i, self.parseDict(j))
-            elif isinstance(j, seqs):
-                setattr(self, i,
-                        type(j)(self.parseDict(sj) if isinstance(sj, dict) else sj for sj in j))
-            else:
-                setattr(self, i, j)
-                self.dict = d
+            setattr(self, i, j)
+        self.dict = d
         return self
 
-    def __str__(self):
-        return json.dumps(self.dict, sort_keys=True, ensure_ascii=False, indent=2)
+    def getW(self):
+        return self.w
+
+    def getWW(self):
+        return self.ww
+
+
+class parseObject():
+    def parseDict(self, d):
+        seqs = tuple, list, set, frozenset
+        for i, j in d.items():
+            if isinstance(j, dict):
+                #对象转换处理，转换成固定对象或者包含键值的当前对象
+                if i == 'aa':
+                    setattr(self, i, AA().parseDict(j))
+                else:
+                    setattr(self, i, self.parseDict(j))
+            elif isinstance(j, seqs):
+                #列表 元组 集合等处理，转换为对应类型的列表/或者当前对象的
+                arr = []
+                for sj in j:
+                    if isinstance(sj, dict):
+                        b = B()
+                        b.parseDict(sj)
+                        arr.append(b)
+                setattr(self, i, arr)
+                # setattr(self, i, type(j)(self.parseDict(sj) if isinstance(sj, dict) else sj for sj in j))
+            else:
+                #基本类型处理，如字符串 数字等
+                setattr(self, i, j)
+        self.dict = d
+        return self
 
     def parseStr(self, str):
         j = json.loads(str)
         p = self.parseDict(j)
         return p
 
-    a = ""
-    b = ""
-    c = []
-
-    def getA(self):
-        return self.a
-
-    def getC(self):
-        return self.c
+    def __str__(self):
+        return json.dumps(self.dict, sort_keys=True, ensure_ascii=False, indent=2)
 
 
-class B(object):
-    d = ""
-    e = ""
-
-    def getD(self):
-        return self.d
-
-    def getE(self):
-        return self.e
-
-
-class A(object):
-    a = ""
-    b = ""
-    c = []
-
-    def getA(self):
-        return self.a
-
-    def getC(self):
-        return self.c
-
-
-jsonStr = '{"a":1,"b":"world","c":[{"d":"Scholar","e":" "},{"d":"Scholar1","e":"11 "}]}'
-a = A()
+jsonStr = '{"a":1,"b":"world","c":[{"d":"Scholar","e":" "},{"d":"Scholar1","e":"11 "}],"aa":{"w":11,"www":22}}'
 obj = parseObject().parseStr(jsonStr)
-# print obj.a
-print obj.getA(), type(obj.c[1])
+print obj.__str__()
+# print obj.getA(), obj.getAA().getW()
+print obj.getC()[0].getD()

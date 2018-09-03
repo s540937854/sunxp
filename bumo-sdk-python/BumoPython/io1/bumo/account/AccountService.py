@@ -1,4 +1,5 @@
 # encoding=utf-8
+from io1.bumo.crypto.protobuf import chain_pb2
 from io1.bumo.encryption.key.PublicKey import PublicKey
 from io1.bumo.exception.SDKException import SDKException
 from io1.bumo.exception.SdkErrors import SdkErrors
@@ -39,4 +40,5 @@ class AccountService:
 
     @classmethod
     def buildActivateOperation(cls, sourceAddress, destAddress, initBalance, metadata):
-        pass
+        transaction = chain_pb2.Transaction()
+        operation = transaction.operations.add()
